@@ -4,8 +4,11 @@ use serde_derive::{Serialize, Deserialize};
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Batch {
     /// command for the package manager
-    /// e.g. 'pacman -S', 'emerge -va', 'npm i g'
+    /// e.g. 'pacman', 'emerge', 'npm'
     pub command: String,
+
+    /// e.g. '-S', '-va', 'i g'
+    pub args: Vec<String>,
 
     /// optinally string to put into stdin since some package managers expect a confirmation
     /// usally 'Y\n' or 'y\n'
