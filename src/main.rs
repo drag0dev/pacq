@@ -1,5 +1,5 @@
 use std::{
-    env::args, fs::OpenOptions
+    env::args, fs::OpenOptions, io::Write
 };
 
 pub mod batch;
@@ -10,8 +10,18 @@ use utils::{
     load_config, load_batch, execute_batch
 };
 
+macro_rules! double_print {
+    ($msg: expr, $log_file: expr) => {
+        println!("{}", $msg);
+        if let Err(e) = $log_file.write_all(format!("---pacq--- {}\n", $msg).as_bytes()) {
+            println!("error: writing to log file: {}", e);
+            println!("Quitting!");
+            return;
+        }
+    };
+}
+
 // TODO: cli offers templates
-// TODO: all output to stdout also to the log file
 
 use batch::Batch;
 use config::Config;
@@ -43,34 +53,34 @@ fn main() {
     let config = load_config(folder_path);
     if config.is_err() {
         let err = config.err().unwrap();
-        println!("error: {}\n\t{}", err, err.root_cause());
+        double_print!(format!("error: {}\n\t{}", err, err.root_cause()), &log_file);
         return;
     }
 
     let config = config.unwrap();
 
     for batch_name in config.batches {
-        println!("Parsing \"{}\" batch", batch_name);
+        double_print!(format!("Parsing \"{}\" batch", batch_name), &log_file);
         let loaded_batch = load_batch(&folder_path, &batch_name);
         if loaded_batch.is_err() {
             let err = loaded_batch.err().unwrap();
-            println!("error: {}\n\t{}", err, err.root_cause());
+            double_print!(format!("error: {}\n\t{}", err, err.root_cause()), &log_file);
             return;
         }
         let loaded_batch = loaded_batch.unwrap();
 
-        println!("Running \"{}\" batch", batch_name);
+        double_print!(format!("Running \"{}\" batch", batch_name), &log_file);
         let res = execute_batch(&loaded_batch, &log_file);
         if res.is_err() {
             let err = res.err().unwrap();
-            println!("error: {}\n\t{}", err, err.root_cause());
+            double_print!(format!("error: {}\n\t{}", err, err.root_cause()), &log_file);
             if loaded_batch.break_the_chain {
-                println!("Breaking the chain!");
+                double_print!("Breaking the chain!", &log_file);
                 break;
             }
-            println!("Finished \"{}\" batch", batch_name);
+            double_print!(format!("Finished \"{}\" batch", batch_name), &log_file);
         }
 
-        println!("Finished \"{}\" batch successfully", batch_name);
+        double_print!(format!("Finished \"{}\" batch successfully", batch_name), &log_file);
     }
 }
