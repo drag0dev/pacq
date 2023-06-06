@@ -1,11 +1,14 @@
 use std::{
     env::args, fs::OpenOptions, io::Write
 };
+use anyhow::Result;
 
 pub mod batch;
 pub mod config;
 pub mod utils;
+pub mod template;
 
+use template::{create_template, BATCH_TEMPLATE, CONFIG_TEMPLATE};
 use utils::{
     load_config, load_batch, execute_batch
 };
@@ -28,14 +31,37 @@ use config::Config;
 
 fn main() {
     let args = args().collect::<Vec<String>>();
-    if args.len() != 3 {
+    if args.len() != 4 {
         println!("Incorrect arguments");
-        println!("Usage: pcq path-to-pacq-folder path-to-log-file");
+        println!("Usage: pcq run path-to-pacq-folder path-to-log-file");
+        println!("Usage: pcq template batch/config file_name");
         return;
     }
 
-    let folder_path = &args[1];
-    let log_path = &args[2];
+    if args[1] != "run" && args[1] != "template" {
+        println!("Incorrect arguments");
+        println!("Usage: pcq run path-to-pacq-folder path-to-log-file");
+        println!("Usage: pcq template batch/config file_name");
+        return;
+    }
+
+    if args[1] == "template" {
+        let res = if args[2] == "batch" { create_template(&args[3], BATCH_TEMPLATE) }
+        else if args[2] == "config" { create_template(&args[3], CONFIG_TEMPLATE) }
+        else {
+            println!("error: unknown template \"{}\"", args[2]);
+            return;
+        };
+
+        if res.is_err() {
+            let err = res.err().unwrap();
+            println!("error: {}\n\t{}", err, err.root_cause());
+        }
+        return;
+    }
+
+    let folder_path = &args[2];
+    let log_path = &args[3];
 
     let log_file = OpenOptions::new()
         .create(true)
