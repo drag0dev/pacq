@@ -7,10 +7,16 @@ pacq folder refers to the folder where config and batch files are
 pacq run path-to-pacq-folder path-to-log-file
 ```
 
+## executing
+execute a single batch
+```
+pacq execute batch_file_name path-to-log-file
+```
+
 ## creating template files
 creates an empty batch or a config file with the given file_name (path)
 ```
-pacq template batch/config file_name"
+pacq template batch/config file_name
 ```
 
 ## config file
