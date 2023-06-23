@@ -8,7 +8,7 @@ use anyhow::{Result, Context, anyhow};
 
 use crate::{Config, Batch};
 
-pub fn load_config(folder_path: &String) -> Result<Config> {
+pub fn load_config(folder_path: &str) -> Result<Config> {
     let config_full_path = format!("{}/config.json", folder_path);
     let config_contents = read_to_string(config_full_path)
         .context("reading config file")?;
@@ -19,9 +19,8 @@ pub fn load_config(folder_path: &String) -> Result<Config> {
     Ok(config)
 }
 
-pub fn load_batch(folder_path: &String, batch_name: &String) -> Result<Batch> {
-    let batch_full_path = format!("{}/{}.json", folder_path, batch_name);
-    let batch_contents = read_to_string(batch_full_path)
+pub fn load_batch(file_path: &str) -> Result<Batch> {
+    let batch_contents = read_to_string(file_path)
         .context("reading batch file")?;
 
     let batch: Batch = from_str(&batch_contents)
