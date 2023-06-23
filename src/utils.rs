@@ -1,6 +1,6 @@
 use std::{
     fs::{read_to_string, File},
-    process::Command,
+    process::{Command, Stdio},
     io::Write
 };
 use serde_json::from_str;
@@ -58,6 +58,7 @@ fn execute_command(batch: &Batch, log_file: &File, items: &[String])
     command.stderr(log_file
             .try_clone()
             .context("cloning file handler for stderr")?);
+    command.stdin(Stdio::piped());
 
     for arg in batch.args.iter() {
         command.arg(arg);
