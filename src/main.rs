@@ -1,7 +1,8 @@
 use std::{
-    env::args, fs::OpenOptions, io::Write
+    env::args,
+    fs::OpenOptions,
+    io::Write
 };
-use anyhow::Result;
 
 pub mod batch;
 pub mod config;
@@ -24,8 +25,6 @@ macro_rules! double_print {
     };
 }
 
-// TODO: cli offers templates
-
 use batch::Batch;
 use config::Config;
 
@@ -33,15 +32,15 @@ fn main() {
     let args = args().collect::<Vec<String>>();
     if args.len() != 4 {
         println!("Incorrect arguments");
-        println!("Usage: pcq run path-to-pacq-folder path-to-log-file");
-        println!("Usage: pcq template batch/config file_name");
+        println!("Usage: pacq run path-to-pacq-folder path-to-log-file");
+        println!("Usage: pacq template batch/config file_name");
         return;
     }
 
     if args[1] != "run" && args[1] != "template" {
         println!("Incorrect arguments");
-        println!("Usage: pcq run path-to-pacq-folder path-to-log-file");
-        println!("Usage: pcq template batch/config file_name");
+        println!("Usage: pacq run path-to-pacq-folder path-to-log-file");
+        println!("Usage: pacq template batch/config file_name");
         return;
     }
 

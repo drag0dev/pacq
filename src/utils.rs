@@ -72,7 +72,7 @@ fn execute_command(batch: &Batch, log_file: &File, items: &[String])
         .context("spawning a command")?;
 
     let mut process_stdin;
-    if let Some(input) = &batch.proceed_input {
+    if let Some(input) = &batch.forward_input {
         if let Some(stdin) = command.stdin.take() {
             process_stdin = stdin;
         } else {

@@ -3,7 +3,7 @@ use serde_derive::{Serialize, Deserialize};
 /// batch represent a single package manager and all items installed through it
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Batch {
-    /// command for the package manager
+    /// package manager
     /// e.g. 'pacman', 'emerge', 'npm'
     pub command: String,
 
@@ -12,7 +12,7 @@ pub struct Batch {
 
     /// optinally string to put into stdin since some package managers expect a confirmation
     /// usally 'Y\n' or 'y\n'
-    pub proceed_input: Option<String>,
+    pub forward_input: Option<String>,
 
     /// all items to be installed via the given package manager
     pub items: Vec<String>,
