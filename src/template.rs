@@ -4,13 +4,11 @@ use std::{
 };
 use anyhow::{Result, Context};
 
-pub static CONFIG_TEMPLATE: &'static str = r#"
-{
+pub static CONFIG_TEMPLATE: &'static str = r#"{
     "batches": []
 }
 "#;
-pub static BATCH_TEMPLATE: &'static str = r#"
-{
+pub static BATCH_TEMPLATE: &'static str = r#"{
     "command": "",
     "args": [],
     ---"proceed_input": ""
